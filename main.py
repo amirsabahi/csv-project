@@ -101,13 +101,16 @@ Main command
 
 def command():
     log('info', 'Started processing the documents.')
-    parser = argparse.ArgumentParser(description='Process....')
-    parser.add_argument('-d', required=True)
+    parser = argparse.ArgumentParser(description='A simple command to detect video locations based on the'
+                                                 ' given date and time. For current directory use . only.')
+    parser.add_argument('-d', required=True, help="Provide the folder url.", default='.', metavar='path')
     args = parser.parse_args()
-
-    dirs = os.listdir()
-    dirs = os.scandir(path=args.d)
-
+    try:
+        dirs = os.scandir(path=args.d)
+    except FileNotFoundError as e:
+        log('error', e)
+        log('warning', 'Exit!')
+        exit(-1)
     main_xlsx_file = None
     data_file_dir = None
     for dir in dirs:
